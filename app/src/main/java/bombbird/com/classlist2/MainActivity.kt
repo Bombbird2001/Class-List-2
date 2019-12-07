@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         for (i in 1..5) {
+            //TODO Add list of lists later
             val checkbox = CheckBox(this)
             checkbox.layoutParams = checkBox1.layoutParams
             checkbox.setText(R.string.loading_name)

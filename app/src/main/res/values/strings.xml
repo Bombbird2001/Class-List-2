@@ -2,4 +2,9 @@
     <string name="app_name">Class List</string>
     <string name="action_settings">Settings</string>
     <string name="loading_name">Loading</string>
+    <string name="choose_class">Choose class:</string>
+    <string name="no_classes">You have no saved classes</string>
+    <string name="enter_class">Enter class name</string>
+    <string name="text_too_long">Name is too long</string>
+    <string name="enter_student">Enter student name</string>
 </resources>
