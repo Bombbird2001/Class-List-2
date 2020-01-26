@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginStart="8dp"
+            android:layout_marginEnd="120dp" app:hintEnabled="true" app:hintAnimationEnabled="true"
+            android:hint="@string/enter_student" android:id="@+id/studentInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp" android:id="@+id/add_student_button"
+            android:background="@drawable/ic_add_black_24dp"
+            style="@style/Widget.AppCompat.Button.Borderless" android:layout_marginEnd="64dp"
+            android:layout_gravity="top|end" android:layout_marginTop="-48dp"/>
+    <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp" android:id="@+id/remove_student_button"
+            android:background="@drawable/ic_delete_black_24dp"
+            style="@style/Widget.AppCompat.Button.Borderless" android:layout_marginEnd="8dp"
+            android:layout_gravity="top|end" android:layout_marginTop="-48dp"/>
+</LinearLayout>

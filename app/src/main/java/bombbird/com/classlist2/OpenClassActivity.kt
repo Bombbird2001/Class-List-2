@@ -15,7 +15,7 @@ class OpenClassActivity : AppCompatActivity() {
         setContentView(R.layout.activity_open_class)
 
         fab_newClass.setOnClickListener {
-            val intent = Intent(this, NewClassActivity::class.java)
+            val intent = Intent(this, EditClassActivity::class.java)
             startActivity(intent)
         }
 
