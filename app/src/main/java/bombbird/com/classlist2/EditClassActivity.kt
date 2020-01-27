@@ -16,6 +16,9 @@ class EditClassActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var students: ArrayList<String> = ArrayList()
 
+    private var classOk: Boolean = false
+    private var arrayOk: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_class)
@@ -23,7 +26,7 @@ class EditClassActivity : AppCompatActivity() {
         students.add("")
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = StudentRecyclerAdapter(students)
+        viewAdapter = StudentRecyclerAdapter(students, this)
 
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
             // use a linear layout manager
@@ -47,21 +50,41 @@ class EditClassActivity : AppCompatActivity() {
                 if (s != null) {
                     when {
                         s.isEmpty() -> {
-                            fab_confirmAddClass.hide()
+                            classOk = false
                             classInputLayout.error = null
                         }
-                        s.length > 30 -> {
-                            fab_confirmAddClass.hide()
+                        s.length >= 30 -> {
+                            classOk = false
                             classInputLayout.error = resources.getString(R.string.text_too_long)
                         }
                         else -> {
-                            fab_confirmAddClass.show()
+                            classOk = true
                             classInputLayout.error = null
                         }
                     }
-                    if (students.isEmpty()) fab_confirmAddClass.visibility = View.INVISIBLE
+                    updateFabVisibility()
                 }
             }
         })
+    }
+
+    fun updateArray(students: ArrayList<String>) {
+        this.students = students
+        arrayOk = false
+        for (s in students) {
+            if (s.isNotEmpty()) {
+                arrayOk = true
+                break
+            }
+        }
+        updateFabVisibility()
+    }
+
+    private fun updateFabVisibility() {
+        if (classOk && arrayOk) {
+            fab_confirmAddClass.show()
+        } else {
+            fab_confirmAddClass.hide()
+        }
     }
 }

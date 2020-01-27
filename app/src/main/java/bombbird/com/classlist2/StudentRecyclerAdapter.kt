@@ -9,7 +9,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 
-class StudentRecyclerAdapter(val students: ArrayList<String>):
+class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: EditClassActivity):
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
@@ -53,6 +53,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>):
                     studentInputLayout.isErrorEnabled = false
                 }
                 students[holder.adapterPosition] = s.toString()
+                activity.updateArray(students)
             }
         })
 
@@ -68,6 +69,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>):
             val removePos = holder.adapterPosition
             if (removePos == -1) return@setOnClickListener
             students.removeAt(removePos)
+            activity.updateArray(students)
             notifyItemRemoved(removePos)
         }
     }
