@@ -12,7 +12,7 @@ import com.google.android.material.textfield.TextInputLayout
 class StudentRecyclerAdapter(val students: ArrayList<String>):
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
 
-    private val views = ArrayList<Array<View>>()
+    lateinit var recyclerView: RecyclerView
 
     class StudentRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view) {
@@ -36,11 +36,6 @@ class StudentRecyclerAdapter(val students: ArrayList<String>):
         val addStudentButton = holder.itemView.findViewById<Button>(R.id.add_student_button)
         val removeStudentButton = holder.itemView.findViewById<Button>(R.id.remove_student_button)
 
-        if (holder.adapterPosition == students.size - 1) {
-            holder.itemView.visibility = View.INVISIBLE
-            return
-        }
-
         studentInputLayout.editText?.setText(students[holder.adapterPosition])
         studentInputLayout.editText?.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -62,6 +57,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>):
         })
 
         addStudentButton.setOnClickListener {
+            if (recyclerView.isAnimating) return@setOnClickListener
             val newPosition = holder.adapterPosition + 1
             students.add(newPosition, "")
             notifyItemInserted(newPosition)
@@ -70,6 +66,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>):
         removeStudentButton.setOnClickListener {
             if (students.size <= 1) return@setOnClickListener
             val removePos = holder.adapterPosition
+            if (removePos == -1) return@setOnClickListener
             students.removeAt(removePos)
             notifyItemRemoved(removePos)
         }
