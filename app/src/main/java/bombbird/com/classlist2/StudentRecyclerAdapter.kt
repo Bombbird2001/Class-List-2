@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 
-class StudentRecyclerAdapter(private val students: ArrayList<String>, private val activity: EditClassActivity):
+class StudentRecyclerAdapter(val students: ArrayList<String>):
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
+
+    private val views = ArrayList<Array<View>>()
 
     class StudentRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view) {
@@ -35,7 +36,12 @@ class StudentRecyclerAdapter(private val students: ArrayList<String>, private va
         val addStudentButton = holder.itemView.findViewById<Button>(R.id.add_student_button)
         val removeStudentButton = holder.itemView.findViewById<Button>(R.id.remove_student_button)
 
-        studentInputLayout.editText?.setText(students[0])
+        if (holder.adapterPosition == students.size - 1) {
+            holder.itemView.visibility = View.INVISIBLE
+            return
+        }
+
+        studentInputLayout.editText?.setText(students[holder.adapterPosition])
         studentInputLayout.editText?.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -47,36 +53,28 @@ class StudentRecyclerAdapter(private val students: ArrayList<String>, private va
                 if (s != null && s.length > 30) {
                     studentInputLayout.isErrorEnabled = true
                     studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.text_too_long)
-                    //updateTopMargins(addStudentButton, -10)
-                    //updateTopMargins(removeStudentButton, -10)
                 } else {
                     studentInputLayout.error = null
                     studentInputLayout.isErrorEnabled = false
-                    //updateTopMargins(addStudentButton, -0)
-                    //updateTopMargins(removeStudentButton, -0)
                 }
+                students[holder.adapterPosition] = s.toString()
             }
         })
 
         addStudentButton.setOnClickListener {
-            students.add(position + 1, "")
-            activity.updateAdapter(students)
+            val newPosition = holder.adapterPosition + 1
+            students.add(newPosition, "")
+            notifyItemInserted(newPosition)
         }
 
         removeStudentButton.setOnClickListener {
             if (students.size <= 1) return@setOnClickListener
-            students.removeAt(position)
-            activity.updateAdapter(students)
+            val removePos = holder.adapterPosition
+            students.removeAt(removePos)
+            notifyItemRemoved(removePos)
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = students.size
-
-    fun updateTopMargins(view: View, dp: Int) {
-        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        layoutParams.topMargin = dp
-        view.layoutParams = layoutParams
-        view.requestLayout()
-    }
 }

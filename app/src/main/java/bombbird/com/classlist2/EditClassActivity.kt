@@ -21,9 +21,10 @@ class EditClassActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_class)
 
         students.add("")
+        students.add("This shouldn't show up")
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = StudentRecyclerAdapter(students, this)
+        viewAdapter = StudentRecyclerAdapter(students)
 
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
             // use a linear layout manager
@@ -61,10 +62,5 @@ class EditClassActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    fun updateAdapter(students: ArrayList<String>) {
-        this.students = students
-        recyclerView.swapAdapter(StudentRecyclerAdapter(students, this), false)
     }
 }
