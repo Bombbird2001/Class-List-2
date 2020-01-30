@@ -12,4 +12,6 @@
     <string name="no_30">30</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="file_load_fail">Failed to load file: check your storage settings</string>
+    <string name="file_save_fail">Failed to save file: Check your storage settings</string>
 </resources>
