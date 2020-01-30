@@ -66,6 +66,18 @@ class EditClassActivity : AppCompatActivity() {
                 }
             }
         })
+
+        button2.setOnClickListener {
+            (viewAdapter as StudentRecyclerAdapter).resizeTo(button2.text.toString().toInt())
+        }
+
+        button3.setOnClickListener {
+            (viewAdapter as StudentRecyclerAdapter).resizeTo(button3.text.toString().toInt())
+        }
+
+        button4.setOnClickListener {
+            (viewAdapter as StudentRecyclerAdapter).resizeTo(button4.text.toString().toInt())
+        }
     }
 
     fun updateArray(students: ArrayList<String>) {

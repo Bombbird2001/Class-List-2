@@ -7,4 +7,9 @@
     <string name="enter_class">Enter class name</string>
     <string name="text_too_long">Name is too long</string>
     <string name="enter_student">Enter student name</string>
+    <string name="no_10">10</string>
+    <string name="no_20">20</string>
+    <string name="no_30">30</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>

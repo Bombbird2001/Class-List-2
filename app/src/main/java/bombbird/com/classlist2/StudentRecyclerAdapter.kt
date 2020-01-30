@@ -1,5 +1,6 @@
 package bombbird.com.classlist2
 
+import android.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,10 +14,10 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
+    var prevSize = 0
 
     class StudentRecyclerViewHolder(view: View):
-        RecyclerView.ViewHolder(view) {
-    }
+        RecyclerView.ViewHolder(view)
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
@@ -71,9 +72,49 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
             students.removeAt(removePos)
             activity.updateArray(students)
             notifyItemRemoved(removePos)
+            prevSize = students.size
+        }
+
+        if (students.size > prevSize) {
+            //New entry added, request focus to edittext
+            studentInputLayout.editText?.requestFocus()
+            prevSize = students.size
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = students.size
+
+    fun resizeTo(newSize: Int) {
+        if (newSize == students.size) return
+        var text = "Resize list to $newSize? You currently have ${students.size} " + (if (students.size == 1) "entry" else "entries") + "."
+        if (newSize < students.size) text += " The last ${students.size - newSize} " + (if (students.size - newSize == 1) "entry" else "entries") + " will be removed."
+        val builder: AlertDialog.Builder = activity.let {
+            AlertDialog.Builder(it)
+        }
+        builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
+            if (newSize > students.size) {
+                var counter = students.size
+                while (counter < newSize) {
+                    students.add("")
+                    counter++
+                }
+                activity.updateArray(students)
+                notifyDataSetChanged()
+                prevSize = students.size
+            } else {
+                var counter = students.size
+                while (counter > newSize) {
+                    students.removeAt(students.size - 1)
+                    counter--
+                }
+                activity.updateArray(students)
+                notifyDataSetChanged()
+                prevSize = students.size
+            }
+        }
+        builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
+        builder.setMessage(text).setTitle("Resize")
+        builder.show()
+    }
 }
