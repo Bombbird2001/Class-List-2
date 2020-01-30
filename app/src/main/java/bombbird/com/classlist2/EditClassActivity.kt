@@ -9,6 +9,9 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_edit_class.*
+import kotlinx.android.synthetic.main.activity_edit_class.view.*
+import java.io.File
+import java.lang.StringBuilder
 
 class EditClassActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -77,6 +80,17 @@ class EditClassActivity : AppCompatActivity() {
 
         button4.setOnClickListener {
             (viewAdapter as StudentRecyclerAdapter).resizeTo(button4.text.toString().toInt())
+        }
+
+        fab_confirmAddClass.setOnClickListener {
+            val sb = StringBuilder()
+            for (student: String in students) {
+                if (sb.isNotEmpty()) sb.append("\n")
+                if (student.isNotEmpty()) {
+                    sb.append(student)
+                }
+            }
+            FileHandler.saveFile(classInputLayout.classInput.text.toString(), sb.toString(), this)
         }
     }
 
