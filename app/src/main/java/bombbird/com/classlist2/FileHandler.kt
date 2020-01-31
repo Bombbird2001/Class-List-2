@@ -29,5 +29,11 @@ class FileHandler {
             ToastManager.toastSaveFail(context)
             return false
         }
+
+        fun deleteFile(name: String, context: Context): Boolean {
+            val file = File(context.filesDir, name)
+            if (!file.exists()) return false
+            return file.delete()
+        }
     }
 }

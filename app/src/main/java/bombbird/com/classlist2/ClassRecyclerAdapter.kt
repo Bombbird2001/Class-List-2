@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 
-class ClassRecyclerAdapter(private val classes: ArrayList<String>, private val activity: OpenClassActivity):
+class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val activity: OpenClassActivity):
     RecyclerView.Adapter<ClassRecyclerAdapter.ClassRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
@@ -42,4 +42,9 @@ class ClassRecyclerAdapter(private val classes: ArrayList<String>, private val a
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = classes.size
+
+    fun updateClasses(classes: ArrayList<String>) {
+        this.classes = classes
+        notifyDataSetChanged()
+    }
 }

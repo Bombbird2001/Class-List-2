@@ -31,11 +31,12 @@ class OpenClassActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadClasses()
-        viewAdapter.notifyDataSetChanged()
+        (viewAdapter as ClassRecyclerAdapter).updateClasses(classes)
         displayClasses()
     }
 
     private fun loadClasses() {
+        classes.clear()
         for (file in FileHandler.listFilesInBaseDirectory(this)) {
             classes.add(file.name)
         }

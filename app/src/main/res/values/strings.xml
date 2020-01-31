@@ -7,11 +7,14 @@
     <string name="enter_class">Enter class name</string>
     <string name="text_too_long">Name is too long</string>
     <string name="enter_student">Enter student name</string>
-    <string name="no_10">10</string>
-    <string name="no_20">20</string>
-    <string name="no_30">30</string>
+    <string name="dialog_resize">Resize to…</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_keep">Keep</string>
+    <string name="dialog_set">Set</string>
     <string name="file_load_fail">Failed to load file: check your storage settings</string>
     <string name="file_save_fail">Failed to save file: Check your storage settings</string>
 </resources>
