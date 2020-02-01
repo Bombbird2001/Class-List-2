@@ -18,4 +18,9 @@
     <string name="dialog_set">Set</string>
     <string name="file_load_fail">Failed to load file: check your storage settings</string>
     <string name="file_save_fail">Failed to save file: Check your storage settings</string>
+    <string name="choose_list">Choose list:</string>
+    <string name="no_lists">You have no saved lists</string>
+    <string name="enter_list">Enter list name</string>
+    <string name="spinner_add_class">Add new class…</string>
+    <string name="invalid_name">Invalid name</string>
 </resources>

@@ -6,57 +6,59 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_open_class.*
+import kotlinx.android.synthetic.main.activity_open_list.*
 
-class OpenClassActivity : AppCompatActivity() {
+class OpenListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private val classes: ArrayList<String> = ArrayList()
+    private val lists: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_open_class)
+        setContentView(R.layout.activity_open_list)
 
-        fab_newClass.setOnClickListener {
-            val intent = Intent(this, EditClassActivity::class.java)
+        fab_newList.setOnClickListener {
+            val intent = Intent(this, NewListActivity::class.java)
+            intent.putStringArrayListExtra("otherLists", lists)
             startActivity(intent)
         }
 
-        loadClasses()
-        displayClasses()
+        loadLists()
+        displayLists()
         loadRecycler()
     }
 
     override fun onResume() {
         super.onResume()
-        loadClasses()
-        (viewAdapter as ClassRecyclerAdapter).updateData(classes)
-        displayClasses()
+
+        loadLists()
+        (viewAdapter as ClassRecyclerAdapter).updateData(lists)
+        displayLists()
     }
 
-    private fun loadClasses() {
-        classes.clear()
-        for (file in FileHandler.listFilesInDirectory("classes", this)) {
-            classes.add(file.name)
+    private fun loadLists() {
+        lists.clear()
+        for (file in FileHandler.listFilesInDirectory("lists", this)) {
+            lists.add(file.name)
         }
     }
 
-    private fun displayClasses() {
-        if (classes.isEmpty()) {
-            textView.visibility = View.INVISIBLE
-            textView2.visibility = View.VISIBLE
+    private fun displayLists() {
+        if (lists.isEmpty()) {
+            textView3.visibility = View.INVISIBLE
+            textView4.visibility = View.VISIBLE
         } else {
-            textView.visibility = View.VISIBLE
-            textView2.visibility = View.INVISIBLE
+            textView3.visibility = View.VISIBLE
+            textView4.visibility = View.INVISIBLE
         }
     }
 
     private fun loadRecycler() {
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ClassRecyclerAdapter(classes, this)
+        viewAdapter = ClassRecyclerAdapter(lists, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView2).apply {
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView3).apply {
             // use a linear layout manager
             layoutManager = viewManager
 

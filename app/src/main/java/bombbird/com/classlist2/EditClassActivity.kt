@@ -1,7 +1,9 @@
 package bombbird.com.classlist2
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_edit_class.*
 import kotlinx.android.synthetic.main.activity_edit_class.view.*
+import java.io.File
 import java.lang.StringBuilder
 
 class EditClassActivity : AppCompatActivity() {
@@ -33,6 +36,10 @@ class EditClassActivity : AppCompatActivity() {
 
         if (intent.hasExtra("otherClasses")) {
             otherClasses = intent.getStringArrayListExtra("otherClasses")
+        } else {
+            for (file: File in FileHandler.listFilesInDirectory("classes", this)) {
+                otherClasses.add(file.name)
+            }
         }
 
         classInput.addTextChangedListener(object: TextWatcher {
@@ -62,6 +69,10 @@ class EditClassActivity : AppCompatActivity() {
                     if (otherClasses.contains(s.toString())) {
                         classOk = false
                         classInputLayout.error = resources.getString(R.string.name_exists)
+                    }
+                    if (s.toString() == resources.getString(R.string.spinner_add_class)) {
+                        classOk = false
+                        classInputLayout.error = resources.getString(R.string.invalid_name)
                     }
                     updateFabVisibility()
                 }
@@ -109,7 +120,7 @@ class EditClassActivity : AppCompatActivity() {
         if (intent.hasExtra("className")) {
             val className = intent.getStringExtra("className")
             classInput.setText(className)
-            val file = FileHandler.loadFile(className, this)
+            val file = FileHandler.loadFile("classes/$className", this)
             if (!file.exists()) {
                 ToastManager.toastLoadFail(this)
                 return
@@ -169,14 +180,14 @@ class EditClassActivity : AppCompatActivity() {
                     AlertDialog.Builder(it)
                 }
                 builder.setPositiveButton(R.string.dialog_delete) { _, _ ->
-                    FileHandler.deleteFile(oldName, this)
+                    FileHandler.deleteClassFile(oldName, this)
                     saveClass()
                 }
                 builder.setNegativeButton(R.string.dialog_keep) { _, _ ->
                     saveClass()
                 }
                 builder.setNeutralButton(R.string.dialog_cancel) { _, _ -> }
-                builder.setMessage("Class has been renamed from $oldName to $newName, delete old class?")
+                builder.setMessage("Class has been renamed from $oldName to $newName, delete $oldName?")
                 builder.show()
             } else {
                 saveClass()
@@ -189,7 +200,7 @@ class EditClassActivity : AppCompatActivity() {
                     AlertDialog.Builder(it)
                 }
                 builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    FileHandler.deleteFile(intent.getStringExtra("className"), this)
+                    FileHandler.deleteClassFile(intent.getStringExtra("className"), this)
                     finish()
                 }
                 builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
@@ -203,14 +214,14 @@ class EditClassActivity : AppCompatActivity() {
     private fun saveClass() {
         val sb = StringBuilder()
         for (student: String in students) {
-            if (sb.isNotEmpty()) {
-                sb.append("\n")
-            }
             if ("" != student) {
-                sb.append(student)
+                sb.append(student + "\n")
             }
         }
-        FileHandler.saveFile(classInputLayout.classInput.text.toString(), sb.toString(), this)
+        FileHandler.saveClassFile(classInputLayout.classInput.text.toString(), sb.toString(), this)
+        val intent = Intent()
+        intent.putExtra("newClass", classInputLayout.classInput.text.toString())
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 }

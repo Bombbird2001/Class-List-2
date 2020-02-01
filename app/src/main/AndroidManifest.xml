@@ -9,6 +9,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".NewListActivity"
+                  android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity android:name=".OpenListActivity">
+        </activity>
         <activity android:name=".EditClassActivity">
         </activity>
         <activity android:name=".OpenClassActivity">
