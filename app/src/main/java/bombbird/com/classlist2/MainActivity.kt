@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var name: String = ""
+    private var className: String = ""
     private val students = ArrayList<String>()
     private val studentsBool = HashMap<String, Boolean>()
     private var listLoading = false
@@ -79,31 +80,39 @@ class MainActivity : AppCompatActivity() {
         } else {
             return
         }
+        if (name.isEmpty()) return
         noListTextView.visibility = View.INVISIBLE
         fab_deleteList.show()
-        if (name.isEmpty()) return
         val file = FileHandler.loadFile("lists/$name", this)
         var index = 0
         var prevCheckBox = CheckBox(this)
         file.forEachLine { content ->
             if (content.isNotEmpty()) {
-                if (index % 2 == 0) {
-                    //Add name
-                    prevCheckBox = CheckBox(this)
-                    prevCheckBox.layoutParams = checkBox1.layoutParams
-                    prevCheckBox.text = content
-                    prevCheckBox.setOnCheckedChangeListener { button, checked ->
-                        if (listLoading) return@setOnCheckedChangeListener
-                        studentsBool[button.text.toString()] = checked
-                        saveList()
+                when {
+                    index == 0 -> {
+                        className = content
+                        nameTextView.text = resources.getString(R.string.class_list_name, content, name)
+                        nameTextView.visibility = View.VISIBLE
                     }
-                    linearLayout.addView(prevCheckBox)
-                    students.add(content)
-                } else {
-                    //Set checked
-                    val checked = content == "1"
-                    prevCheckBox.isChecked = checked
-                    studentsBool[students.last()] = checked
+                    index % 2 == 1 -> {
+                        //Add name
+                        prevCheckBox = CheckBox(this)
+                        prevCheckBox.layoutParams = checkBox1.layoutParams
+                        prevCheckBox.text = content
+                        prevCheckBox.setOnCheckedChangeListener { button, checked ->
+                            if (listLoading) return@setOnCheckedChangeListener
+                            studentsBool[button.text.toString()] = checked
+                            saveList()
+                        }
+                        linearLayout.addView(prevCheckBox)
+                        students.add(content)
+                    }
+                    else -> {
+                        //Set checked
+                        val checked = content == "1"
+                        prevCheckBox.isChecked = checked
+                        studentsBool[students.last()] = checked
+                    }
                 }
                 index++
             }
@@ -113,6 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveList() {
         val stringBuilder = StringBuilder()
+        stringBuilder.append("$className\n")
         for (student: String in students) {
             stringBuilder.append("$student\n")
             stringBuilder.append((if (studentsBool.containsKey(student) && studentsBool[student]!!) "1" else "0") + "\n")
@@ -150,5 +160,8 @@ class MainActivity : AppCompatActivity() {
         }
         noListTextView.visibility = View.VISIBLE
         fab_deleteList.hide()
+        className = ""
+        nameTextView.text = ""
+        nameTextView.visibility = View.INVISIBLE
     }
 }

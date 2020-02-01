@@ -23,28 +23,4 @@
 
     <include layout="@layout/content_main"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_openLists"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_folder_open_black_24dp" android:backgroundTint="#FFC107"
-            android:tint="#FFFFFF" app:backgroundTint="#FFC107"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp"
-            android:id="@+id/fab_openClasses" app:backgroundTint="@color/design_default_color_primary_dark"
-            android:tint="#FFFFFF"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true" app:srcCompat="@drawable/ic_delete_black_24dp"
-            android:id="@+id/fab_deleteList" android:focusable="true" app:backgroundTint="@color/red"
-            android:tint="@android:color/white" android:layout_gravity="bottom|end" android:layout_marginBottom="16dp"
-            android:layout_marginEnd="80dp" android:visibility="invisible"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

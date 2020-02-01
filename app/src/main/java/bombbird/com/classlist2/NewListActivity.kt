@@ -132,6 +132,7 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     private fun saveNewList() {
         val stringBuilder = StringBuilder()
+        stringBuilder.append("${spinner3.selectedItem}\n")
         val file = FileHandler.loadFile("classes/${spinner3.selectedItem}", this)
         if (!file.exists()) {
             ToastManager.toastLoadFail(this)

@@ -25,4 +25,5 @@
     <string name="spinner_select_class">Select a class…</string>
     <string name="invalid_name">Invalid name</string>
     <string name="no_list_open">Open a list with the yellow button, or manage your classes with the blue button</string>
+    <string name="class_list_name">%1$s: %2$s</string>
 </resources>

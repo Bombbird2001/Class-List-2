@@ -9,6 +9,44 @@
         tools:showIn="@layout/activity_main"
         tools:context=".MainActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_openLists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_folder_open_black_24dp" android:backgroundTint="#FFC107"
+            android:tint="#FFFFFF" app:backgroundTint="#FFC107" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp"
+            android:id="@+id/fab_openClasses" app:backgroundTint="@color/design_default_color_primary_dark"
+            android:tint="#FFFFFF" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" app:srcCompat="@drawable/ic_delete_black_24dp"
+            android:id="@+id/fab_deleteList" android:focusable="true" app:backgroundTint="@color/red"
+            android:tint="@android:color/white" android:layout_gravity="bottom|end"
+            android:visibility="invisible" app:layout_constraintEnd_toStartOf="@+id/fab_openLists"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"/>
+    <TextView
+            android:text="@string/loading_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/nameTextView" android:layout_gravity="bottom|start"
+            app:layout_constraintStart_toEndOf="@+id/fab_openClasses"
+            app:layout_constraintEnd_toStartOf="@+id/fab_deleteList"
+            android:visibility="invisible" android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2" android:layout_marginTop="16dp"/>
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent" app:layout_constraintTop_toTopOf="parent"
