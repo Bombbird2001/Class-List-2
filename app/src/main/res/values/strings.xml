@@ -6,8 +6,9 @@
     <string name="no_classes">You have no saved classes</string>
     <string name="enter_class">Enter class name</string>
     <string name="text_too_long">Name is too long</string>
+    <string name="name_exists">Name already exists</string>
     <string name="enter_student">Enter student name</string>
-    <string name="dialog_resize">Resize to…</string>
+    <string name="dialog_resize">Resize</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_yes">Yes</string>

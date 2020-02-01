@@ -2,7 +2,6 @@ package bombbird.com.classlist2
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -20,6 +19,7 @@ class EditClassActivity : AppCompatActivity() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var students: ArrayList<String> = ArrayList()
+    private var otherClasses: ArrayList<String> = ArrayList()
 
     private var classOk: Boolean = false
     private var arrayOk: Boolean = false
@@ -30,6 +30,10 @@ class EditClassActivity : AppCompatActivity() {
 
         loadStudents()
         loadRecycler()
+
+        if (intent.hasExtra("otherClasses")) {
+            otherClasses = intent.getStringArrayListExtra("otherClasses")
+        }
 
         classInput.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -55,6 +59,10 @@ class EditClassActivity : AppCompatActivity() {
                             classInputLayout.error = null
                         }
                     }
+                    if (otherClasses.contains(s.toString())) {
+                        classOk = false
+                        classInputLayout.error = resources.getString(R.string.name_exists)
+                    }
                     updateFabVisibility()
                 }
             }
@@ -70,6 +78,7 @@ class EditClassActivity : AppCompatActivity() {
         updateFabVisibility()
     }
 
+    @SuppressLint("RestrictedApi")
     private fun updateFabVisibility() {
         if (classOk && arrayOk) {
             fab_confirmAddClass.show()
@@ -135,8 +144,9 @@ class EditClassActivity : AppCompatActivity() {
             val builder: AlertDialog.Builder = let {
                 AlertDialog.Builder(it)
             }
-            builder.setTitle("Resize to")
-            val dialogView = layoutInflater.inflate(R.layout.dialog_number_picker, null)
+            builder.setTitle(R.string.dialog_resize)
+            builder.setMessage("\nChange class size to:")
+            val dialogView = layoutInflater.inflate(R.layout.dialog_number_picker, findViewById(R.id.constraintLayout1), false)
             builder.setView(dialogView)
             val np = dialogView.findViewById<NumberPicker>(R.id.numberPicker1)
             np.minValue = 1

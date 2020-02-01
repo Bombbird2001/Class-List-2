@@ -36,6 +36,9 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
             //Editclassactivity with class name
             val intent = Intent(activity, EditClassActivity::class.java)
             intent.putExtra("className", classButton.text.toString())
+            val newClasses = classes
+            classes.remove(classButton.text.toString())
+            intent.putStringArrayListExtra("otherClasses", newClasses)
             activity.startActivity(intent)
         }
     }
