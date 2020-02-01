@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.size
 import kotlinx.android.synthetic.main.activity_new_list.*
 import kotlinx.android.synthetic.main.activity_new_list.view.*
 import java.io.File
@@ -68,20 +67,23 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        loadSpinner()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
+            @Suppress("UNCHECKED_CAST")
             if (requestCode == RC_NEW_CLASS) {
-                if (spinner3.size >= 2) spinner3.setSelection(spinner3.size - 2)
+                (spinner3.adapter as ArrayAdapter<String>).remove(resources.getString(R.string.spinner_add_class))
+                (spinner3.adapter as ArrayAdapter<String>).add(data?.getStringExtra("newClass"))
+                (spinner3.adapter as ArrayAdapter<String>).add(resources.getString(R.string.spinner_add_class))
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (requestCode == RC_NEW_CLASS) {
+                spinner3.setSelection(0)
             }
         }
+        classOk = true
+        updateFabVisibility()
     }
 
     private fun loadButton() {
@@ -93,6 +95,7 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     private fun loadSpinner() {
         val classes = ArrayList<String>()
+        classes.add(resources.getString(R.string.spinner_select_class))
         for (file: File in FileHandler.listFilesInDirectory("classes", this)) {
             classes.add(file.name)
         }
@@ -114,13 +117,12 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             val intent = Intent(this, EditClassActivity::class.java)
             startActivityForResult(intent, RC_NEW_CLASS)
         } else {
-            classOk = true
+            classOk = spinner3.selectedItem.toString() != resources.getString(R.string.spinner_select_class)
         }
         updateFabVisibility()
     }
 
     private fun updateFabVisibility() {
-        println("$listOk $classOk")
         if (classOk && listOk) {
             fab_confirmAddList.show()
         } else {

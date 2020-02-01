@@ -70,7 +70,7 @@ class EditClassActivity : AppCompatActivity() {
                         classOk = false
                         classInputLayout.error = resources.getString(R.string.name_exists)
                     }
-                    if (s.toString() == resources.getString(R.string.spinner_add_class)) {
+                    if (s.toString() == resources.getString(R.string.spinner_add_class) || s.toString() == resources.getString(R.string.spinner_select_class)) {
                         classOk = false
                         classInputLayout.error = resources.getString(R.string.invalid_name)
                     }

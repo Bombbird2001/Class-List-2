@@ -44,6 +44,10 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
                 activity.startActivity(intent)
             } else if (activity is OpenListActivity) {
                 //Back to mainactivity with list name
+                val intent = Intent()
+                intent.putExtra("listName", classButton.text.toString())
+                activity.setResult(Activity.RESULT_OK, intent)
+                activity.finish()
             }
         }
     }
