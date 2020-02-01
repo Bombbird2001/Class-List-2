@@ -10,17 +10,22 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".NewListActivity"
-                  android:windowSoftInputMode="adjustResize">
+                  android:windowSoftInputMode="adjustResize"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".OpenListActivity">
+        <activity android:name=".OpenListActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".EditClassActivity">
+        <activity android:name=".EditClassActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".OpenClassActivity">
+        <activity android:name=".OpenClassActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
