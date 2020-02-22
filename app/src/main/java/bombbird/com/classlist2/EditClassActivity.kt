@@ -204,7 +204,7 @@ class EditClassActivity : AppCompatActivity() {
                     finish()
                 }
                 builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
-                builder.setMessage("Delete class?")
+                builder.setMessage("Delete class " + intent.getStringExtra("className") + "?")
                 builder.show()
             }
             fab_deleteClass.visibility = View.VISIBLE

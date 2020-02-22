@@ -4,15 +4,19 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.CheckBox
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.lang.StringBuilder
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     companion object MainActivity {
@@ -22,8 +26,12 @@ class MainActivity : AppCompatActivity() {
     private var name: String = ""
     private var className: String = ""
     private val students = ArrayList<String>()
-    private val studentsBool = HashMap<String, Boolean>()
-    private var listLoading = false
+    private var studentsBool = HashMap<String, Boolean>()
+    private var comments = HashMap<String, String>()
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         FileHandler.initDirs(this)
         loadButtons()
+
+        loadRecycler()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -71,7 +81,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateLists(newName: String?) {
-        listLoading = true
         students.clear()
         studentsBool.clear()
         clearCheckboxes()
@@ -83,51 +92,62 @@ class MainActivity : AppCompatActivity() {
         if (name.isEmpty()) return
         noListTextView.visibility = View.INVISIBLE
         fab_deleteList.show()
-        val file = FileHandler.loadFile("lists/$name", this)
-        var index = 0
-        var prevCheckBox = CheckBox(this)
-        file.forEachLine { content ->
-            if (content.isNotEmpty()) {
-                when {
-                    index == 0 -> {
-                        className = content
-                        nameTextView.text = resources.getString(R.string.class_list_name, content, name)
-                        nameTextView.visibility = View.VISIBLE
-                    }
-                    index % 2 == 1 -> {
-                        //Add name
-                        prevCheckBox = CheckBox(this)
-                        prevCheckBox.layoutParams = checkBox1.layoutParams
-                        prevCheckBox.text = content
-                        prevCheckBox.setOnCheckedChangeListener { button, checked ->
-                            if (listLoading) return@setOnCheckedChangeListener
-                            studentsBool[button.text.toString()] = checked
-                            saveList()
+        try {
+            val data = FileHandler.loadJson("lists/$name", this)
+            className = data.getString("className")
+            val studentArray = data.getJSONArray("students")
+            for (i in 0 until studentArray.length()) {
+                val obj = studentArray.getJSONObject(i)
+                val name = obj.getString("name")
+                students.add(name)
+                studentsBool[name] = obj.getBoolean("checked")
+                comments[name] = obj.getString("comments")
+            }
+        } catch (e: JSONException) {
+            Log.w("JSON Parse", "Failed to parse file into JSON, using old parse method")
+            val file = FileHandler.loadFile("lists/$name", this)
+            var index = 0
+            file.forEachLine { content ->
+                if (content.isNotEmpty()) {
+                    when {
+                        index == 0 -> {
+                            className = content
+                            nameTextView.text = resources.getString(R.string.class_list_name, content, name)
+                            nameTextView.visibility = View.VISIBLE
                         }
-                        linearLayout.addView(prevCheckBox)
-                        students.add(content)
+                        index % 2 == 1 -> {
+                            students.add(content)
+                        }
+                        else -> {
+                            studentsBool[students.last()] = content == "1"
+                        }
                     }
-                    else -> {
-                        //Set checked
-                        val checked = content == "1"
-                        prevCheckBox.isChecked = checked
-                        studentsBool[students.last()] = checked
-                    }
+                    index++
                 }
-                index++
             }
         }
-        listLoading = false
     }
 
     private fun saveList() {
-        val stringBuilder = StringBuilder()
-        stringBuilder.append("$className\n")
+        val data = JSONObject()
+        data.put("className", className)
+        val studentArray = JSONArray()
         for (student: String in students) {
-            stringBuilder.append("$student\n")
-            stringBuilder.append((if (studentsBool.containsKey(student) && studentsBool[student]!!) "1" else "0") + "\n")
+            val studentObj = JSONObject()
+            studentObj.put("name", student)
+            studentObj.put("checked", studentsBool.containsKey(student) && studentsBool[student]!!)
+            studentObj.put("comments", if (comments.containsKey(student)) comments[student] else "")
+            studentArray.put(studentObj)
         }
-        FileHandler.saveListFile(name, stringBuilder.toString(), this)
+        data.put("students", studentArray)
+
+        FileHandler.saveListFile(name, data.toString(4), this)
+    }
+
+    fun updateData(checked: HashMap<String, Boolean>, comments: HashMap<String, String>) {
+        studentsBool = checked
+        this.comments = comments
+        saveList()
     }
 
     private fun loadButtons() {
@@ -148,20 +168,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearCheckboxes() {
-        val toRemove = ArrayList<View>()
-        for (i in 1..linearLayout.childCount) {
-            val view = linearLayout.getChildAt(i)
-            if (view is CheckBox && view.tag != "checkBox1") {
-                toRemove.add(view)
-            }
-        }
-        for (view: View in toRemove) {
-            linearLayout.removeView(view)
-        }
+        students.clear()
+        studentsBool.clear()
+        comments.clear()
+
+        (viewAdapter as CheckboxRecyclerAdapter).updateData(students, studentsBool, comments)
+
         noListTextView.visibility = View.VISIBLE
         fab_deleteList.hide()
         className = ""
         nameTextView.text = ""
         nameTextView.visibility = View.INVISIBLE
+    }
+
+    private fun loadRecycler() {
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = CheckboxRecyclerAdapter(students, studentsBool, comments, this)
+
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView4).apply {
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
+
+        (viewAdapter as CheckboxRecyclerAdapter).recyclerView = recyclerView
     }
 }

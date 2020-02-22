@@ -1,6 +1,7 @@
 package bombbird.com.classlist2
 
 import android.content.Context
+import org.json.JSONObject
 import java.io.File
 
 class FileHandler {
@@ -57,6 +58,10 @@ class FileHandler {
         private fun deleteFile(file: File): Boolean {
             if (!file.exists()) return false
             return file.delete()
+        }
+
+        fun loadJson(name: String, context: Context): JSONObject {
+            return JSONObject(loadFile(name, context).readText())
         }
     }
 }
