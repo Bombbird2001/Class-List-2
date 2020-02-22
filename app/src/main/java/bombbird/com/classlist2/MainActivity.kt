@@ -95,6 +95,8 @@ class MainActivity : AppCompatActivity() {
         try {
             val data = FileHandler.loadJson("lists/$name", this)
             className = data.getString("className")
+            nameTextView.text = resources.getString(R.string.class_list_name, className, name)
+            nameTextView.visibility = View.VISIBLE
             val studentArray = data.getJSONArray("students")
             for (i in 0 until studentArray.length()) {
                 val obj = studentArray.getJSONObject(i)
