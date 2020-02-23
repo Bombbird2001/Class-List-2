@@ -24,7 +24,8 @@
                 android:hint="@string/enter_student" android:id="@+id/studentInputLayout"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="120dp">
+                android:layout_marginEnd="120dp" app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"

@@ -107,12 +107,13 @@ class EditClassActivity : AppCompatActivity() {
     }
 
     private fun checkStudents(): Boolean {
+        var ok = false
         for (s in students) {
             if (s.isNotEmpty()) {
-                return true
+                ok = true
             }
         }
-        return false
+        return ok && (students.toHashSet().size == students.size) //Ensure no duplicate names
     }
 
     private fun loadStudents() {

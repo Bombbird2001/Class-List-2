@@ -23,18 +23,6 @@
                 app:layout_constraintStart_toEndOf="@+id/checkBox2"
                 android:text="@string/loading_name" android:gravity="center_vertical" android:visibility="visible"
                 android:layout_marginStart="16dp" android:layout_marginTop="22dp"/>
-        <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="text|textCapSentences"
-                android:ems="10"
-                android:id="@+id/comment_editText" app:layout_constraintEnd_toStartOf="@+id/save_comment_button"
-                android:layout_marginEnd="8dp"
-                android:text="@string/loading_name"
-                android:visibility="visible" android:importantForAutofill="no" android:hint="@string/enter_comment"
-                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
-                app:layout_constraintStart_toEndOf="@+id/checkBox2" android:layout_marginStart="8dp"
-                android:imeOptions="actionDone"/>
         <Button
                 android:layout_width="48dp"
                 android:layout_height="48dp" android:id="@+id/edit_comment_button"
@@ -47,6 +35,20 @@
                 android:layout_height="48dp" android:id="@+id/save_comment_button"
                 app:layout_constraintEnd_toEndOf="@+id/edit_comment_button"
                 android:background="@drawable/ic_check_black_24dp" app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" android:visibility="invisible"/>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/checkBox2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/save_comment_button" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" android:layout_marginTop="4dp" android:hint="@string/enter_comment"
+                android:id="@+id/comment_input" app:hintEnabled="true" app:hintAnimationEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|textCapSentences"
+                    android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

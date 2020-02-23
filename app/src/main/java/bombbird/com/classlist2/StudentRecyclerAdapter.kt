@@ -2,19 +2,20 @@ package bombbird.com.classlist2
 
 import android.app.AlertDialog
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.students_recycler.view.*
 
 class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: EditClassActivity):
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
-    var prevSize = 0
+    private var prevSize = 0
 
     class StudentRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view)
@@ -33,11 +34,13 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
     override fun onBindViewHolder(holder: StudentRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val studentInputLayout = holder.itemView.findViewById<TextInputLayout>(R.id.studentInputLayout)
-        val addStudentButton = holder.itemView.findViewById<Button>(R.id.add_student_button)
-        val removeStudentButton = holder.itemView.findViewById<Button>(R.id.remove_student_button)
+        val studentInputLayout = holder.itemView.studentInputLayout
+        val addStudentButton = holder.itemView.add_student_button
+        val removeStudentButton = holder.itemView.remove_student_button
 
+        studentInputLayout.editText?.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         studentInputLayout.editText?.setText(students[holder.adapterPosition])
+        checkNameValidity(studentInputLayout.editText?.text.toString(), studentInputLayout, holder)
         studentInputLayout.editText?.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -46,15 +49,9 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s != null && s.length > 30) {
-                    studentInputLayout.isErrorEnabled = true
-                    studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.text_too_long)
-                } else {
-                    studentInputLayout.error = null
-                    studentInputLayout.isErrorEnabled = false
-                }
                 students[holder.adapterPosition] = s.toString()
                 activity.updateArray(students)
+                checkNameValidity(s.toString(), studentInputLayout, holder)
             }
         })
 
@@ -84,6 +81,19 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = students.size
+
+    private fun checkNameValidity(s: String?, studentInputLayout: TextInputLayout, holder: StudentRecyclerViewHolder) {
+        if (s != null && s.length > 30) {
+            studentInputLayout.isErrorEnabled = true
+            studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.text_too_long)
+        } else if (s != null && students.indexOf(s) != students.lastIndexOf(s) && holder.adapterPosition > students.indexOf(s)) {
+            studentInputLayout.isErrorEnabled = true
+            studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.name_exists)
+        } else {
+            studentInputLayout.error = null
+            studentInputLayout.isErrorEnabled = false
+        }
+    }
 
     fun resizeTo(newSize: Int) {
         if (newSize == students.size) return

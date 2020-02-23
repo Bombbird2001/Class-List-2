@@ -5,8 +5,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.class_list_recycler.view.*
 
 class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val activity: Activity):
     RecyclerView.Adapter<ClassRecyclerAdapter.ClassRecyclerViewHolder>() {
@@ -30,7 +30,7 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
     override fun onBindViewHolder(holder: ClassRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val classButton = holder.itemView.findViewById<Button>(R.id.classOrListButton)
+        val classButton = holder.itemView.classOrListButton
         classButton.text = classes[holder.adapterPosition]
 
         classButton.setOnClickListener {
