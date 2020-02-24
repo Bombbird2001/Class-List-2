@@ -107,13 +107,29 @@ class EditClassActivity : AppCompatActivity() {
     }
 
     private fun checkStudents(): Boolean {
-        var ok = false
         for (s in students) {
             if (s.isNotEmpty()) {
-                ok = true
+                return true
             }
         }
-        return ok && (students.toHashSet().size == students.size) //Ensure no duplicate names
+        return false
+    }
+
+    private fun getDupeStudents(): HashSet<String> {
+        val existingSet = HashSet<String>()
+        val dupeSet = HashSet<String>()
+        for (s in students) {
+            if (s.isNotEmpty()) {
+                if (!existingSet.contains(s)) {
+                    //Add to existing set if not already inside
+                    existingSet.add(s)
+                } else if (!dupeSet.contains(s)) {
+                    //Otherwise if already exists, add to dupe set if not already inside
+                    dupeSet.add(s)
+                }
+            }
+        }
+        return dupeSet
     }
 
     private fun loadStudents() {
@@ -174,6 +190,18 @@ class EditClassActivity : AppCompatActivity() {
         }
 
         fab_confirmAddClass.setOnClickListener {
+            //Alert if duplicate students exist
+            val dupes = getDupeStudents()
+            if (dupes.size > 0) {
+                val builder1: AlertDialog.Builder = let {
+                    AlertDialog.Builder(it)
+                }
+                builder1.setMessage("Duplicate student " + (if (dupes.size > 1) "names" else "name") + ": ${dupes.joinToString()} " + (if (dupes.size > 1) "are" else "is") +  " not allowed, please edit your list.")
+                builder1.setPositiveButton(R.string.dialog_ok) { _, _ -> } //Dismiss the dialog
+                builder1.show()
+                return@setOnClickListener
+            }
+
             if (intent.hasExtra("className") && classInputLayout.classInput.text.toString() != intent.getStringExtra("className")) {
                 val newName = classInputLayout.classInput.text.toString()
                 val oldName = intent.getStringExtra("className")

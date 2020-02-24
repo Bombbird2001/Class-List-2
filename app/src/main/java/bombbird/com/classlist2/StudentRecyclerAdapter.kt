@@ -38,7 +38,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
         val addStudentButton = holder.itemView.add_student_button
         val removeStudentButton = holder.itemView.remove_student_button
 
-        studentInputLayout.editText?.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+        studentInputLayout.editText?.inputType = (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_CLASS_TEXT)
         studentInputLayout.editText?.setText(students[holder.adapterPosition])
         checkNameValidity(studentInputLayout.editText?.text.toString(), studentInputLayout, holder)
         studentInputLayout.editText?.addTextChangedListener(object: TextWatcher {
@@ -86,7 +86,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
         if (s != null && s.length > 30) {
             studentInputLayout.isErrorEnabled = true
             studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.text_too_long)
-        } else if (s != null && students.indexOf(s) != students.lastIndexOf(s) && holder.adapterPosition > students.indexOf(s)) {
+        } else if (s != null && !s.isEmpty() && students.indexOf(s) != students.lastIndexOf(s) && holder.adapterPosition > students.indexOf(s)) {
             studentInputLayout.isErrorEnabled = true
             studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.name_exists)
         } else {
