@@ -27,4 +27,11 @@
     <string name="no_list_open">Open a list with the yellow button, or manage your classes with the blue button</string>
     <string name="class_list_name">%1$s: %2$s</string>
     <string name="enter_comment">Enter comments</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="display_header">Display</string>
+
+    <!-- Display Preferences -->
+    <string name="font_title">Font size</string>
 </resources>

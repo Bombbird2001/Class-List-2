@@ -2,9 +2,11 @@ package bombbird.com.classlist2
 
 import android.app.Activity
 import android.content.Intent
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.class_list_recycler.view.*
 
@@ -32,6 +34,9 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
         // - replace the contents of the view with that element
         val classButton = holder.itemView.classOrListButton
         classButton.text = classes[holder.adapterPosition]
+        PreferenceManager.getDefaultSharedPreferences(activity).getString("font_size", "14")?.toFloatOrNull()?.let {
+            classButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, it)
+        }
 
         classButton.setOnClickListener {
             if (activity is OpenClassActivity) {

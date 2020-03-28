@@ -1,6 +1,7 @@
 package bombbird.com.classlist2
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,9 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
         checkBox.isChecked = if (checked.containsKey(name)) checked[name]!! else false
         editComment.editText?.setText(if (comments.containsKey(name)) comments[name] else "")
         commentView.text = if (comments.containsKey(name)) comments[name] else ""
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, activity.fontSize)
+        editComment.editText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, activity.fontSize)
+        commentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, activity.fontSize)
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (loading) return@setOnCheckedChangeListener
@@ -66,6 +70,7 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
             editComment.editText?.setText(comments[name])
             editComment.editText?.requestFocus()
             (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(editComment.editText, InputMethodManager.SHOW_IMPLICIT)
+            editComment.editText?.length()?.let { it1 -> editComment.editText?.setSelection(it1) }
         }
 
         confirmButton.setOnClickListener {
