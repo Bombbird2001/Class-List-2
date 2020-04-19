@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     var fontSize = 14f
+    var confirmCheckbox = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
         val temp = PreferenceManager.getDefaultSharedPreferences(this).getString("font_size", "14")?.toFloatOrNull()
         if (temp != null) fontSize = temp
+
+        confirmCheckbox = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("confirm_checkbox", false)
 
         noListTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
     }

@@ -1,5 +1,6 @@
 package bombbird.com.classlist2
 
+import android.app.AlertDialog
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -52,8 +53,26 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (loading) return@setOnCheckedChangeListener
-            checked[name] = isChecked
-            activity.updateData(checked, comments)
+            if (activity.confirmCheckbox) {
+                val builder: AlertDialog.Builder = let {
+                    AlertDialog.Builder(activity)
+                }
+                builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
+                    checked[name] = isChecked
+                    activity.updateData(checked, comments)
+                }
+                builder.setNegativeButton(R.string.dialog_cancel) { _, _ ->
+                    loading = true
+                    checkBox.isChecked = !isChecked
+                    loading = false
+                }
+                builder.setMessage("${if (isChecked) "Check" else "Uncheck"} $name?")
+                builder.setCancelable(false)
+                builder.show()
+            } else {
+                checked[name] = isChecked
+                activity.updateData(checked, comments)
+            }
         }
 
         editComment.visibility = View.INVISIBLE

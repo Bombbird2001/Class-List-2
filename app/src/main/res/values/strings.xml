@@ -31,7 +31,12 @@
 
     <!-- Preference Titles -->
     <string name="display_header">Display</string>
+    <string name="action_header">Action</string>
 
     <!-- Display Preferences -->
     <string name="font_title">Font size</string>
+
+    <!-- Action Preferences -->
+    <string name="confirm_checkbox_title">Checkbox confirmation</string>
+    <string name="confirm_checkbox_summary">Ask before checking or unchecking</string>
 </resources>
