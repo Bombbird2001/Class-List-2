@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,6 +61,9 @@ class MainActivity : AppCompatActivity() {
 
         val temp = PreferenceManager.getDefaultSharedPreferences(this).getString("font_size", "14")?.toFloatOrNull()
         if (temp != null) fontSize = temp
+
+        val theme = PreferenceManager.getDefaultSharedPreferences(this).getString("display_theme", "-1")?.toIntOrNull()
+        if (theme != null) AppCompatDelegate.setDefaultNightMode(theme)
 
         confirmCheckbox = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("confirm_checkbox", false)
 

@@ -35,6 +35,7 @@
 
     <!-- Display Preferences -->
     <string name="font_title">Font size</string>
+    <string name="display_theme">Theme</string>
 
     <!-- Action Preferences -->
     <string name="confirm_checkbox_title">Checkbox confirmation</string>
