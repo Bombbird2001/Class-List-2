@@ -57,13 +57,13 @@ class MainActivity : AppCompatActivity() {
         FileHandler.initDirs(this)
         loadButtons()
 
-        loadRecycler()
-
         val temp = PreferenceManager.getDefaultSharedPreferences(this).getString("font_size", "14")?.toFloatOrNull()
         if (temp != null) fontSize = temp
 
         val theme = PreferenceManager.getDefaultSharedPreferences(this).getString("display_theme", "-1")?.toIntOrNull()
         if (theme != null) AppCompatDelegate.setDefaultNightMode(theme)
+
+        loadRecycler()
 
         confirmCheckbox = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("confirm_checkbox", false)
 

@@ -2,6 +2,7 @@ package bombbird.com.classlist2
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Configuration
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -22,9 +23,15 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): CheckboxRecyclerViewHolder {
+        val currentNightMode: Int = (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+        var resource = R.layout.checkbox_recycler
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            resource = R.layout.checkbox_recycler_night
+        }
+
         // create a new view
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.checkbox_recycler, parent, false) as View
+            .inflate(resource, parent, false) as View
         // set the view's size, margins, paddings and layout parameters
 
         return CheckboxRecyclerViewHolder(view)

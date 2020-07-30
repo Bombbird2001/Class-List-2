@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <CheckBox
+                android:text="@string/loading_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/checkBox2"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/comment_textView"
+                app:layout_constraintEnd_toStartOf="@+id/save_comment_button"
+                android:layout_marginEnd="8dp" app:layout_constraintTop_toTopOf="parent" android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/checkBox2"
+                android:text="@string/loading_name" android:gravity="center_vertical" android:visibility="visible"
+                android:layout_marginStart="16dp" android:layout_marginTop="22dp"/>
+        <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp" android:id="@+id/edit_comment_button"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_edit_white_24dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" tools:ignore="PrivateResource"
+                android:inputType="none"/>
+        <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp" android:id="@+id/save_comment_button"
+                app:layout_constraintEnd_toEndOf="@+id/edit_comment_button"
+                android:background="@drawable/ic_check_white_24dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" android:visibility="invisible"/>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/checkBox2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/save_comment_button" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" android:layout_marginTop="4dp" android:hint="@string/enter_comment"
+                android:id="@+id/comment_input" app:hintEnabled="true" app:hintAnimationEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|textCapSentences"
+                    android:imeOptions="actionDone" android:textSize="14sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
