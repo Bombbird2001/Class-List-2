@@ -1,6 +1,7 @@
 package bombbird.com.classlist2
 
 import android.app.AlertDialog
+import android.content.res.Configuration
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -23,9 +24,14 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): StudentRecyclerViewHolder {
+        val currentNightMode: Int = (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+        var resource = R.layout.students_recycler
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            resource = R.layout.students_recycler_night
+        }
         // create a new view
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.students_recycler, parent, false) as View
+            .inflate(resource, parent, false) as View
         // set the view's size, margins, paddings and layout parameters
         return StudentRecyclerViewHolder(view)
     }
