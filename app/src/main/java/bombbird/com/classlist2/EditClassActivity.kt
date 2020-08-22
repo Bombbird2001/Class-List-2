@@ -22,7 +22,7 @@ class EditClassActivity : AppCompatActivity() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var students: ArrayList<String> = ArrayList()
-    private var otherClasses: ArrayList<String> = ArrayList()
+    private var otherClasses: ArrayList<String>? = ArrayList()
 
     private var classOk: Boolean = false
     private var arrayOk: Boolean = false
@@ -38,7 +38,7 @@ class EditClassActivity : AppCompatActivity() {
             otherClasses = intent.getStringArrayListExtra("otherClasses")
         } else {
             for (file: File in FileHandler.listFilesInDirectory("classes", this)) {
-                otherClasses.add(file.name)
+                otherClasses?.add(file.name)
             }
         }
 
@@ -66,10 +66,13 @@ class EditClassActivity : AppCompatActivity() {
                             classInputLayout.error = null
                         }
                     }
-                    if (otherClasses.contains(s.toString())) {
-                        classOk = false
-                        classInputLayout.error = resources.getString(R.string.name_exists)
+                    otherClasses?.contains(s.toString()).let {
+                        if (it != null && it) {
+                            classOk = false
+                            classInputLayout.error = resources.getString(R.string.name_exists)
+                        }
                     }
+
                     if (s.toString() == resources.getString(R.string.spinner_add_class) || s.toString() == resources.getString(R.string.spinner_select_class)) {
                         classOk = false
                         classInputLayout.error = resources.getString(R.string.invalid_name)
@@ -209,7 +212,9 @@ class EditClassActivity : AppCompatActivity() {
                     AlertDialog.Builder(it)
                 }
                 builder.setPositiveButton(R.string.dialog_delete) { _, _ ->
-                    FileHandler.deleteClassFile(oldName, this)
+                    if (oldName != null) {
+                        FileHandler.deleteClassFile(oldName, this)
+                    }
                     saveClass()
                 }
                 builder.setNegativeButton(R.string.dialog_keep) { _, _ ->
@@ -229,7 +234,7 @@ class EditClassActivity : AppCompatActivity() {
                     AlertDialog.Builder(it)
                 }
                 builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    FileHandler.deleteClassFile(intent.getStringExtra("className"), this)
+                    intent.getStringExtra("className")?.let { it1 -> FileHandler.deleteClassFile(it1, this) }
                     finish()
                 }
                 builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> }

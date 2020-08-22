@@ -18,7 +18,7 @@ import java.lang.StringBuilder
 class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var listOk = false
     private var classOk = false
-    private var otherLists = ArrayList<String>()
+    private var otherLists: ArrayList<String>? = ArrayList()
 
     companion object {
         private const val RC_NEW_CLASS = 7777
@@ -57,9 +57,11 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                             listInputLayout.error = null
                         }
                     }
-                    if (otherLists.contains(s.toString())) {
-                        listOk = false
-                        listInputLayout.error = resources.getString(R.string.name_exists)
+                    otherLists?.contains(s.toString()).let {
+                        if (it != null && it) {
+                            listOk = false
+                            listInputLayout.error = resources.getString(R.string.name_exists)
+                        }
                     }
                     updateFabVisibility()
                 }
