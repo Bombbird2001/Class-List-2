@@ -14,7 +14,7 @@ class FileHandler {
         }
 
         fun listFilesInDirectory(dir: String, context: Context): Array<File> {
-            return File(context.filesDir, dir).listFiles()
+            return File(context.filesDir, dir).listFiles() ?: arrayOf()
         }
 
         fun loadFile(name: String, context: Context): File {

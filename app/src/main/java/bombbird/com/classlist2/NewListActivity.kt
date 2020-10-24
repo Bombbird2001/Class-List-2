@@ -102,7 +102,7 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             classes.add(file.name)
         }
         classes.add(resources.getString(R.string.spinner_add_class))
-        val dataAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classes)
+        val dataAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, classes)
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner3.adapter = dataAdapter
         spinner3.onItemSelectedListener = this

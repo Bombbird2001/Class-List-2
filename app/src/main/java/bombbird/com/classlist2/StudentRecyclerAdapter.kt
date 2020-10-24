@@ -92,7 +92,7 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
         if (s != null && s.length > 30) {
             studentInputLayout.isErrorEnabled = true
             studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.text_too_long)
-        } else if (s != null && !s.isEmpty() && students.indexOf(s) != students.lastIndexOf(s) && holder.adapterPosition > students.indexOf(s)) {
+        } else if (s != null && s.isNotEmpty() && students.indexOf(s) != students.lastIndexOf(s) && holder.adapterPosition > students.indexOf(s)) {
             studentInputLayout.isErrorEnabled = true
             studentInputLayout.error = studentInputLayout.context.resources.getString(R.string.name_exists)
         } else {
