@@ -10,8 +10,11 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.activity_new_list.*
-import kotlinx.android.synthetic.main.activity_new_list.view.*
+import android.widget.Spinner
+import bombbird.com.classlist2.databinding.ActivityNewListBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.io.File
 import java.lang.StringBuilder
 
@@ -20,13 +23,26 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private var classOk = false
     private var otherLists: ArrayList<String>? = ArrayList()
 
+    private lateinit var binding: ActivityNewListBinding
+    private lateinit var listInputLayout: TextInputLayout
+    private lateinit var fabConfirmAddList: FloatingActionButton
+    private lateinit var spinner3: Spinner
+    private lateinit var listInput: TextInputEditText
+
     companion object {
         private const val RC_NEW_CLASS = 7777
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_list)
+        binding = ActivityNewListBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        listInputLayout = binding.listInputLayout
+        fabConfirmAddList = binding.fabConfirmAddList
+        spinner3 = binding.spinner3
+        listInput = binding.listInput
 
         otherLists = intent.getStringArrayListExtra("otherLists")
 
@@ -89,7 +105,7 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     }
 
     private fun loadButton() {
-        fab_confirmAddList.setOnClickListener {
+        fabConfirmAddList.setOnClickListener {
             saveNewList()
             finish()
         }
@@ -126,9 +142,9 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     private fun updateFabVisibility() {
         if (classOk && listOk) {
-            fab_confirmAddList.show()
+            fabConfirmAddList.show()
         } else {
-            fab_confirmAddList.hide()
+            fabConfirmAddList.hide()
         }
     }
 
@@ -145,6 +161,6 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 stringBuilder.append("$student\n0\n")
             }
         }
-        FileHandler.saveListFile(listInputLayout.listInput.text.toString(), stringBuilder.toString(), this)
+        FileHandler.saveListFile(listInput.text.toString(), stringBuilder.toString(), this)
     }
 }

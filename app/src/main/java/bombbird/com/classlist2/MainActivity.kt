@@ -10,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import bombbird.com.classlist2.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -35,21 +36,35 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var fabOpenLists: FloatingActionButton
+    private lateinit var fabOpenClasses: FloatingActionButton
+    private lateinit var noListTextView: TextView
+    private lateinit var fabDeleteList: FloatingActionButton
+    private lateinit var nameTextView: TextView
 
     var fontSize = 14f
     var confirmCheckbox = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        fab_openLists.setOnClickListener {
+        fabOpenLists = binding.contentMain.fabOpenLists
+        fabOpenClasses = binding.contentMain.fabOpenClasses
+        noListTextView = binding.contentMain.noListTextView
+        fabDeleteList = binding.contentMain.fabDeleteList
+        nameTextView = binding.contentMain.nameTextView
+
+        fabOpenLists.setOnClickListener {
             val intent = Intent(this, OpenListActivity::class.java)
             startActivityForResult(intent, RC_UPDATE_LIST)
         }
 
-        fab_openClasses.setOnClickListener {
+        fabOpenClasses.setOnClickListener {
             val intent = Intent(this, OpenClassActivity::class.java)
             startActivity(intent)
         }
@@ -111,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (name.isEmpty()) return
         noListTextView.visibility = View.INVISIBLE
-        fab_deleteList.show()
+        fabDeleteList.show()
         try {
             val data = FileHandler.loadJson("lists/$name", this)
             className = data.getString("className")
@@ -173,7 +188,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadButtons() {
-        fab_deleteList.setOnClickListener {
+        fabDeleteList.setOnClickListener {
             if (name.isNotEmpty()) {
                 val builder: AlertDialog.Builder = let {
                     AlertDialog.Builder(it)
@@ -197,7 +212,7 @@ class MainActivity : AppCompatActivity() {
         (viewAdapter as CheckboxRecyclerAdapter).updateData(students, studentsBool, comments)
 
         noListTextView.visibility = View.VISIBLE
-        fab_deleteList.hide()
+        fabDeleteList.hide()
         className = ""
         nameTextView.text = ""
         nameTextView.visibility = View.INVISIBLE
@@ -207,7 +222,7 @@ class MainActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = CheckboxRecyclerAdapter(students, studentsBool, comments, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView4).apply {
+        recyclerView = binding.contentMain.recyclerView4.apply {
             // use a linear layout manager
             layoutManager = viewManager
 

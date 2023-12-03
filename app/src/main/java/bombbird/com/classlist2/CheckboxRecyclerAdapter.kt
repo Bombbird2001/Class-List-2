@@ -2,20 +2,24 @@ package bombbird.com.classlist2
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.checkbox_recycler.view.*
+import bombbird.com.classlist2.databinding.CheckboxRecyclerBinding
 
-class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private var checked: HashMap<String, Boolean>, private var comments: HashMap<String, String>, private val activity: MainActivity):
+class CheckboxRecyclerAdapter(private var students: ArrayList<String>,
+                              private var checked: HashMap<String, Boolean>,
+                              private var comments: HashMap<String, String>,
+                              private val activity: MainActivity):
     RecyclerView.Adapter<CheckboxRecyclerAdapter.CheckboxRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
     private var loading = false
+    private var _binding: CheckboxRecyclerBinding? = null
+    private val binding get() = _binding!!
 
     class CheckboxRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view)
@@ -23,16 +27,10 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): CheckboxRecyclerViewHolder {
-        val currentNightMode: Int = (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
-        var resource = R.layout.checkbox_recycler
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            resource = R.layout.checkbox_recycler_night
-        }
-
         // create a new view
-        val view = LayoutInflater.from(parent.context)
-            .inflate(resource, parent, false) as View
-        // set the view's size, margins, paddings and layout parameters
+        _binding = CheckboxRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false)
+        val view = binding.root
 
         return CheckboxRecyclerViewHolder(view)
     }
@@ -42,12 +40,11 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>, private v
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         val name = students[holder.adapterPosition]
-
-        val checkBox = holder.itemView.checkBox2
-        val editComment = holder.itemView.comment_input
-        val commentView = holder.itemView.comment_textView
-        val editButton = holder.itemView.edit_comment_button
-        val confirmButton = holder.itemView.save_comment_button
+        val checkBox = binding.checkBox2
+        val editComment = binding.commentInput
+        val commentView = binding.commentTextView
+        val editButton = binding.editCommentButton
+        val confirmButton = binding.saveCommentButton
 
         loading = true
         checkBox.text = name

@@ -4,21 +4,31 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_open_list.*
+import bombbird.com.classlist2.databinding.ActivityOpenListBinding
 
 class OpenListActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityOpenListBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private val lists: ArrayList<String> = ArrayList()
 
+    private lateinit var textView3: TextView
+    private lateinit var textView4: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_open_list)
+        binding = ActivityOpenListBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        fab_newList.setOnClickListener {
+        textView3 = binding.textView3
+        textView4 = binding.textView4
+
+        binding.fabNewList.setOnClickListener {
             val intent = Intent(this, NewListActivity::class.java)
             intent.putStringArrayListExtra("otherLists", lists)
             startActivity(intent)
@@ -58,7 +68,7 @@ class OpenListActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = ClassRecyclerAdapter(lists, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView3).apply {
+        recyclerView = binding.recyclerView3.apply {
             // use a linear layout manager
             layoutManager = viewManager
 

@@ -4,21 +4,31 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_open_class.*
+import bombbird.com.classlist2.databinding.ActivityOpenClassBinding
 
 class OpenClassActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityOpenClassBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private val classes: ArrayList<String> = ArrayList()
 
+    private lateinit var textView: TextView
+    private lateinit var textView2: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_open_class)
+        binding = ActivityOpenClassBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        fab_newClass.setOnClickListener {
+        textView = binding.textView
+        textView2 = binding.textView2
+
+        binding.fabNewClass.setOnClickListener {
             val intent = Intent(this, EditClassActivity::class.java)
             startActivity(intent)
         }
@@ -56,7 +66,7 @@ class OpenClassActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = ClassRecyclerAdapter(classes, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView2).apply {
+        recyclerView = binding.recyclerView2.apply {
             // use a linear layout manager
             layoutManager = viewManager
 

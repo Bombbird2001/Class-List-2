@@ -1,7 +1,6 @@
 package bombbird.com.classlist2
 
 import android.app.AlertDialog
-import android.content.res.Configuration
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -9,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import bombbird.com.classlist2.databinding.StudentsRecyclerBinding
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.students_recycler.view.*
 
 class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: EditClassActivity):
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentRecyclerViewHolder>() {
@@ -18,21 +17,20 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
     lateinit var recyclerView: RecyclerView
     private var prevSize = 0
 
+    private var _binding: StudentsRecyclerBinding? = null
+    private val binding get() = _binding!!
+
     class StudentRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view)
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): StudentRecyclerViewHolder {
-        val currentNightMode: Int = (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
-        var resource = R.layout.students_recycler
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            resource = R.layout.students_recycler_night
-        }
         // create a new view
-        val view = LayoutInflater.from(parent.context)
-            .inflate(resource, parent, false) as View
-        // set the view's size, margins, paddings and layout parameters
+        _binding = StudentsRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false)
+        val view = binding.root
+
         return StudentRecyclerViewHolder(view)
     }
 
@@ -40,9 +38,9 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
     override fun onBindViewHolder(holder: StudentRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val studentInputLayout = holder.itemView.studentInputLayout
-        val addStudentButton = holder.itemView.add_student_button
-        val removeStudentButton = holder.itemView.remove_student_button
+        val studentInputLayout = binding.studentInputLayout
+        val addStudentButton = binding.addStudentButton
+        val removeStudentButton = binding.removeStudentButton
 
         studentInputLayout.editText?.inputType = (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_CLASS_TEXT)
         studentInputLayout.editText?.setText(students[holder.adapterPosition])

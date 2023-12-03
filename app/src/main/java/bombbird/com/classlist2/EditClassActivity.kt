@@ -9,27 +9,45 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Button
 import android.widget.NumberPicker
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_edit_class.*
-import kotlinx.android.synthetic.main.activity_edit_class.view.*
+import bombbird.com.classlist2.databinding.ActivityEditClassBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.io.File
 import java.lang.StringBuilder
 
 class EditClassActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityEditClassBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var students: ArrayList<String> = ArrayList()
     private var otherClasses: ArrayList<String>? = ArrayList()
 
+    private lateinit var classInputLayout: TextInputLayout
+    private lateinit var fabConfirmAddClass: FloatingActionButton
+    private lateinit var classInput: TextInputEditText
+    private lateinit var button2: Button
+    private lateinit var fabDeleteClass: FloatingActionButton
+
     private var classOk: Boolean = false
     private var arrayOk: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_class)
+        binding = ActivityEditClassBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        classInputLayout = binding.classInputLayout
+        fabConfirmAddClass = binding.fabConfirmAddClass
+        classInput = binding.classInput
+        button2 = binding.button2
+        fabDeleteClass = binding.fabDeleteClass
 
         loadStudents()
         loadRecycler()
@@ -73,7 +91,8 @@ class EditClassActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (s.toString() == resources.getString(R.string.spinner_add_class) || s.toString() == resources.getString(R.string.spinner_select_class)) {
+                    if (s.toString() == resources.getString(R.string.spinner_add_class) ||
+                        s.toString() == resources.getString(R.string.spinner_select_class)) {
                         classOk = false
                         classInputLayout.error = resources.getString(R.string.invalid_name)
                     }
@@ -95,15 +114,16 @@ class EditClassActivity : AppCompatActivity() {
     @SuppressLint("RestrictedApi")
     private fun updateFabVisibility() {
         if (classOk && arrayOk) {
-            fab_confirmAddClass.show()
+            fabConfirmAddClass.show()
         } else {
-            fab_confirmAddClass.hide()
+            fabConfirmAddClass.hide()
         }
     }
 
     private fun initFabCheck() {
         arrayOk = checkStudents()
-        if (classInput.text?.isNotEmpty()!! && classInput.text?.length!! < 30) {
+        if (classInput.text?.isNotEmpty() == true &&
+            (classInput.text?.length ?: 0) < 30) {
             classOk = true
         }
         updateFabVisibility()
@@ -158,7 +178,7 @@ class EditClassActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = StudentRecyclerAdapter(students, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
+        recyclerView = binding.recyclerView.apply {
             // use a linear layout manager
             layoutManager = viewManager
 
@@ -177,7 +197,8 @@ class EditClassActivity : AppCompatActivity() {
             }
             builder.setTitle(R.string.dialog_resize)
             builder.setMessage("\nChange class size to:")
-            val dialogView = layoutInflater.inflate(R.layout.dialog_number_picker, findViewById(R.id.constraintLayout1), false)
+            val dialogView = layoutInflater.inflate(R.layout.dialog_number_picker,
+                binding.constraintLayout1, false)
             builder.setView(dialogView)
             val np = dialogView.findViewById<NumberPicker>(R.id.numberPicker1)
             np.minValue = 1
@@ -192,21 +213,24 @@ class EditClassActivity : AppCompatActivity() {
             builder.show()
         }
 
-        fab_confirmAddClass.setOnClickListener {
+        fabConfirmAddClass.setOnClickListener {
             //Alert if duplicate students exist
             val dupes = getDupeStudents()
             if (dupes.size > 0) {
                 val builder1: AlertDialog.Builder = let {
                     AlertDialog.Builder(it)
                 }
-                builder1.setMessage("Duplicate student " + (if (dupes.size > 1) "names" else "name") + ": ${dupes.joinToString()} " + (if (dupes.size > 1) "are" else "is") +  " not allowed, please edit your list.")
+                builder1.setMessage("Duplicate student " +
+                        (if (dupes.size > 1) "names" else "name") + ": ${dupes.joinToString()} "
+                        + (if (dupes.size > 1) "are" else "is") +  " not allowed, please edit your list.")
                 builder1.setPositiveButton(R.string.dialog_ok) { _, _ -> } //Dismiss the dialog
                 builder1.show()
                 return@setOnClickListener
             }
 
-            if (intent.hasExtra("className") && classInputLayout.classInput.text.toString() != intent.getStringExtra("className")) {
-                val newName = classInputLayout.classInput.text.toString()
+            if (intent.hasExtra("className") &&
+                classInput.text.toString() != intent.getStringExtra("className")) {
+                val newName = classInput.text.toString()
                 val oldName = intent.getStringExtra("className")
                 val builder: AlertDialog.Builder = let {
                     AlertDialog.Builder(it)
@@ -229,19 +253,21 @@ class EditClassActivity : AppCompatActivity() {
         }
 
         if (intent.hasExtra("className")) {
-            fab_deleteClass.setOnClickListener {
+            fabDeleteClass.setOnClickListener {
                 val builder: AlertDialog.Builder = let {
                     AlertDialog.Builder(it)
                 }
                 builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    intent.getStringExtra("className")?.let { it1 -> FileHandler.deleteClassFile(it1, this) }
+                    intent.getStringExtra("className")?.let { it1 ->
+                        FileHandler.deleteClassFile(it1, this)
+                    }
                     finish()
                 }
                 builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
                 builder.setMessage("Delete class " + intent.getStringExtra("className") + "?")
                 builder.show()
             }
-            fab_deleteClass.visibility = View.VISIBLE
+            fabDeleteClass.visibility = View.VISIBLE
         }
     }
 
@@ -252,9 +278,9 @@ class EditClassActivity : AppCompatActivity() {
                 sb.append(student + "\n")
             }
         }
-        FileHandler.saveClassFile(classInputLayout.classInput.text.toString(), sb.toString(), this)
+        FileHandler.saveClassFile(classInput.text.toString(), sb.toString(), this)
         val intent = Intent()
-        intent.putExtra("newClass", classInputLayout.classInput.text.toString())
+        intent.putExtra("newClass", classInput.text.toString())
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

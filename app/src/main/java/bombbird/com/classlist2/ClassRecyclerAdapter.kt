@@ -8,12 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.class_list_recycler.view.*
+import bombbird.com.classlist2.databinding.ClassListRecyclerBinding
 
-class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val activity: Activity):
+class ClassRecyclerAdapter(private var classes: ArrayList<String>,
+                           private val activity: Activity):
     RecyclerView.Adapter<ClassRecyclerAdapter.ClassRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
+    private var _binding: ClassListRecyclerBinding? = null
+    private val binding get() = _binding!!
 
     class ClassRecyclerViewHolder(view: View):
         RecyclerView.ViewHolder(view)
@@ -22,9 +25,10 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): ClassRecyclerViewHolder {
         // create a new view
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.class_list_recycler, parent, false) as View
-        // set the view's size, margins, paddings and layout parameters
+        _binding = ClassListRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false)
+        val view = binding.root
+
         return ClassRecyclerViewHolder(view)
     }
 
@@ -32,9 +36,10 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>, private val a
     override fun onBindViewHolder(holder: ClassRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val classButton = holder.itemView.classOrListButton
+        val classButton = binding.classOrListButton
         classButton.text = classes[holder.adapterPosition]
-        PreferenceManager.getDefaultSharedPreferences(activity).getString("font_size", "14")?.toFloatOrNull()?.let {
+        PreferenceManager.getDefaultSharedPreferences(activity)
+            .getString("font_size", "14")?.toFloatOrNull()?.let {
             classButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, it)
         }
 

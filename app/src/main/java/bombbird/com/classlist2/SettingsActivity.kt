@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
             .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences: SharedPreferences, s: String ->
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences: SharedPreferences, s: String? ->
             if (s == "display_theme") {
                 val theme = sharedPreferences.getString(s, "-1")?.toIntOrNull()
                 if (theme != null) AppCompatDelegate.setDefaultNightMode(theme)
