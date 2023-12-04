@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import bombbird.com.classlist2.databinding.StudentsRecyclerBinding
@@ -17,30 +16,23 @@ class StudentRecyclerAdapter(val students: ArrayList<String>, val activity: Edit
     lateinit var recyclerView: RecyclerView
     private var prevSize = 0
 
-    private var _binding: StudentsRecyclerBinding? = null
-    private val binding get() = _binding!!
-
-    class StudentRecyclerViewHolder(view: View):
-        RecyclerView.ViewHolder(view)
+    class StudentRecyclerViewHolder(val binding: StudentsRecyclerBinding):
+        RecyclerView.ViewHolder(binding.root)
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): StudentRecyclerViewHolder {
-        // create a new view
-        _binding = StudentsRecyclerBinding.inflate(LayoutInflater.from(parent.context),
-            parent, false)
-        val view = binding.root
-
-        return StudentRecyclerViewHolder(view)
+        return StudentRecyclerViewHolder(StudentsRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false))
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: StudentRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val studentInputLayout = binding.studentInputLayout
-        val addStudentButton = binding.addStudentButton
-        val removeStudentButton = binding.removeStudentButton
+        val studentInputLayout = holder.binding.studentInputLayout
+        val addStudentButton = holder.binding.addStudentButton
+        val removeStudentButton = holder.binding.removeStudentButton
 
         studentInputLayout.editText?.inputType = (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_CLASS_TEXT)
         studentInputLayout.editText?.setText(students[holder.adapterPosition])

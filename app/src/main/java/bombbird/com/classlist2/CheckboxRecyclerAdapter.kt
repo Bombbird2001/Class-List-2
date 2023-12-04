@@ -18,21 +18,15 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>,
 
     lateinit var recyclerView: RecyclerView
     private var loading = false
-    private var _binding: CheckboxRecyclerBinding? = null
-    private val binding get() = _binding!!
 
-    class CheckboxRecyclerViewHolder(view: View):
-        RecyclerView.ViewHolder(view)
+    class CheckboxRecyclerViewHolder(val binding: CheckboxRecyclerBinding):
+        RecyclerView.ViewHolder(binding.root)
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): CheckboxRecyclerViewHolder {
-        // create a new view
-        _binding = CheckboxRecyclerBinding.inflate(LayoutInflater.from(parent.context),
-            parent, false)
-        val view = binding.root
-
-        return CheckboxRecyclerViewHolder(view)
+        return CheckboxRecyclerViewHolder(CheckboxRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false))
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -40,15 +34,15 @@ class CheckboxRecyclerAdapter(private var students: ArrayList<String>,
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         val name = students[holder.adapterPosition]
-        val checkBox = binding.checkBox2
-        val editComment = binding.commentInput
-        val commentView = binding.commentTextView
-        val editButton = binding.editCommentButton
-        val confirmButton = binding.saveCommentButton
+        val checkBox = holder.binding.checkBox2
+        val editComment = holder.binding.commentInput
+        val commentView = holder.binding.commentTextView
+        val editButton = holder.binding.editCommentButton
+        val confirmButton = holder.binding.saveCommentButton
 
         loading = true
         checkBox.text = name
-        checkBox.isChecked = if (checked.containsKey(name)) checked[name]!! else false
+        checkBox.isChecked = if (checked.containsKey(name)) checked[name] == true else false
         editComment.editText?.setText(if (comments.containsKey(name)) comments[name] else "")
         commentView.text = if (comments.containsKey(name)) comments[name] else ""
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, activity.fontSize)

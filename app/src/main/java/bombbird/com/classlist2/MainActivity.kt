@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var comments = HashMap<String, String>()
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: CheckboxRecyclerAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var binding: ActivityMainBinding
 
@@ -163,6 +163,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        viewAdapter.updateData(students, studentsBool, comments)
     }
 
     private fun saveList() {
@@ -209,7 +210,7 @@ class MainActivity : AppCompatActivity() {
         studentsBool.clear()
         comments.clear()
 
-        (viewAdapter as CheckboxRecyclerAdapter).updateData(students, studentsBool, comments)
+        viewAdapter.updateData(students, studentsBool, comments)
 
         noListTextView.visibility = View.VISIBLE
         fabDeleteList.hide()
@@ -230,6 +231,6 @@ class MainActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        (viewAdapter as CheckboxRecyclerAdapter).recyclerView = recyclerView
+        viewAdapter.recyclerView = recyclerView
     }
 }

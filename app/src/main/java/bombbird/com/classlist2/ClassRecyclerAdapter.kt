@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,28 +14,22 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>,
     RecyclerView.Adapter<ClassRecyclerAdapter.ClassRecyclerViewHolder>() {
 
     lateinit var recyclerView: RecyclerView
-    private var _binding: ClassListRecyclerBinding? = null
-    private val binding get() = _binding!!
 
-    class ClassRecyclerViewHolder(view: View):
-        RecyclerView.ViewHolder(view)
+    class ClassRecyclerViewHolder(val binding: ClassListRecyclerBinding):
+        RecyclerView.ViewHolder(binding.root)
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): ClassRecyclerViewHolder {
-        // create a new view
-        _binding = ClassListRecyclerBinding.inflate(LayoutInflater.from(parent.context),
-            parent, false)
-        val view = binding.root
-
-        return ClassRecyclerViewHolder(view)
+        return ClassRecyclerViewHolder(ClassListRecyclerBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false))
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ClassRecyclerViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        val classButton = binding.classOrListButton
+        val classButton = holder.binding.classOrListButton
         classButton.text = classes[holder.adapterPosition]
         PreferenceManager.getDefaultSharedPreferences(activity)
             .getString("font_size", "14")?.toFloatOrNull()?.let {
@@ -45,7 +38,7 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>,
 
         classButton.setOnClickListener {
             if (activity is OpenClassActivity) {
-                //Editclassactivity with class name
+                //EditClassActivity with class name
                 val intent = Intent(activity, EditClassActivity::class.java)
                 intent.putExtra("className", classButton.text.toString())
                 val newClasses = classes
@@ -53,7 +46,7 @@ class ClassRecyclerAdapter(private var classes: ArrayList<String>,
                 intent.putStringArrayListExtra("otherClasses", newClasses)
                 activity.startActivity(intent)
             } else if (activity is OpenListActivity) {
-                //Back to mainactivity with list name
+                //Back to MainActivity with list name
                 val intent = Intent()
                 intent.putExtra("listName", classButton.text.toString())
                 activity.setResult(Activity.RESULT_OK, intent)
