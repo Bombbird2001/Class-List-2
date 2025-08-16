@@ -1,6 +1,5 @@
 package bombbird.com.classlist2
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -22,9 +22,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
-    companion object MainActivity {
-        const val RC_UPDATE_LIST = 7779
-    }
 
     private var name: String = ""
     private var className: String = ""
@@ -43,6 +40,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fabDeleteList: FloatingActionButton
     private lateinit var nameTextView: TextView
 
+    private val updateListLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            updateLists(result.data?.getStringExtra("listName"))
+        }
+    }
+
     var fontSize = 14f
     var confirmCheckbox = false
 
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         fabOpenLists.setOnClickListener {
             val intent = Intent(this, OpenListActivity::class.java)
-            startActivityForResult(intent, RC_UPDATE_LIST)
+            updateListLauncher.launch(intent)
         }
 
         fabOpenClasses.setOnClickListener {
@@ -104,16 +108,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RC_UPDATE_LIST) {
-                updateLists(data?.getStringExtra("listName"))
-            }
-        }
-    }
-
     private fun updateLists(newName: String?) {
         students.clear()
         studentsBool.clear()
@@ -139,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 studentsBool[name] = obj.getBoolean("checked")
                 comments[name] = obj.getString("comments")
             }
-        } catch (e: JSONException) {
+        } catch (_: JSONException) {
             Log.w("JSON Parse", "Failed to parse file into JSON, using old parse method")
             val file = FileHandler.loadFile("lists/$name", this)
             var index = 0

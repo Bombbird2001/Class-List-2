@@ -1,7 +1,6 @@
 package bombbird.com.classlist2
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.activity.result.contract.ActivityResultContracts
 import bombbird.com.classlist2.databinding.ActivityNewListBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -29,8 +29,18 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private lateinit var spinner3: Spinner
     private lateinit var listInput: TextInputEditText
 
-    companion object {
-        private const val RC_NEW_CLASS = 7777
+    private val newClassLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        @Suppress("UNCHECKED_CAST")
+        if (result.resultCode == RESULT_OK) {
+            (spinner3.adapter as ArrayAdapter<String>).remove(resources.getString(R.string.spinner_add_class))
+            (spinner3.adapter as ArrayAdapter<String>).add(result.data?.getStringExtra("newClass"))
+            (spinner3.adapter as ArrayAdapter<String>).add(resources.getString(R.string.spinner_add_class))
+        } else if (result.resultCode == RESULT_CANCELED) {
+            spinner3.setSelection(0)
+        }
+        classOk = true
+        updateFabVisibility()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,25 +95,6 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            @Suppress("UNCHECKED_CAST")
-            if (requestCode == RC_NEW_CLASS) {
-                (spinner3.adapter as ArrayAdapter<String>).remove(resources.getString(R.string.spinner_add_class))
-                (spinner3.adapter as ArrayAdapter<String>).add(data?.getStringExtra("newClass"))
-                (spinner3.adapter as ArrayAdapter<String>).add(resources.getString(R.string.spinner_add_class))
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            if (requestCode == RC_NEW_CLASS) {
-                spinner3.setSelection(0)
-            }
-        }
-        classOk = true
-        updateFabVisibility()
-    }
-
     private fun loadButton() {
         fabConfirmAddList.setOnClickListener {
             saveNewList()
@@ -133,7 +124,7 @@ class NewListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         if (spinner3.selectedItem.toString() == resources.getString(R.string.spinner_add_class)) {
             classOk = false
             val intent = Intent(this, EditClassActivity::class.java)
-            startActivityForResult(intent, RC_NEW_CLASS)
+            newClassLauncher.launch(intent)
         } else {
             classOk = spinner3.selectedItem.toString() != resources.getString(R.string.spinner_select_class)
         }

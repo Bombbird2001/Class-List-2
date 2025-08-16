@@ -1,6 +1,5 @@
 package bombbird.com.classlist2
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,12 +26,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(listener)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
