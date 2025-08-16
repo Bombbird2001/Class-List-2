@@ -6,18 +6,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bombbird.com.classlist2.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
